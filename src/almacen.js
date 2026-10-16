@@ -3,8 +3,8 @@
 // El Modelo no sabe si los datos viven en memoria, en localStorage o en un servidor:
 // solo exige que el almacén tenga estos dos métodos (un "contrato"):
 //
-//     cargar()              → devuelve la lista de evaluaciones guardadas
-//     guardar(evaluaciones) → reemplaza lo guardado por esta lista
+//    cargar()              → devuelve la lista de evaluaciones guardadas
+//    guardar(evaluaciones) → reemplaza lo guardado por esta lista
 //
 // Cualquier clase con esos dos métodos sirve. En la Parte 5C crearás una más.
 
@@ -43,5 +43,26 @@ export class AlmacenLocal {
 
   guardar(evaluaciones) {
     localStorage.setItem(this.#clave, JSON.stringify(evaluaciones));
+  }
+}
+
+/** 5C: Guarda en sessionStorage del navegador: sobrevive a recargar la pestaña, pero se pierde al cerrarla. */
+export class AlmacenSesion {
+  #clave;
+
+  constructor(clave = 'notas.v1') {
+    this.#clave = clave;
+  }
+
+  cargar() {
+    try {
+      return JSON.parse(sessionStorage.getItem(this.#clave) ?? '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  guardar(evaluaciones) {
+    sessionStorage.setItem(this.#clave, JSON.stringify(evaluaciones));
   }
 }
